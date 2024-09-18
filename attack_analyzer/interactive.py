@@ -1,5 +1,5 @@
 import inquirer
-from my_package.analyzer import LogAnalyzer, ClusteringAnalyzer
+from attack.analyzer import LogAnalyzer, ClusteringAnalyzer
 from my_package.geolocation import GeoLocator
 
 
