@@ -1,10 +1,10 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='my_project',
+    name='attack_analyzer',
     version='0.1',
     description='Log Analyzer, Clustering, and Geolocation for Fail2Ban and UFW logs',
-    author='Your Name',
+    author='preslaff',
     packages=find_packages(),
     install_requires=[
         'pandas',
@@ -17,7 +17,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'log-analyzer=my_package.interactive:main',  # This defines the CLI command 'log-analyzer'
+            'attack-analyzer=attack_analyzer.interactive:main',  # This defines the CLI command 'log-analyzer'
         ],
     },
 )
