@@ -17,7 +17,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'attack-analyzer=attack-analyzer.interactive:main',  # This defines the CLI command 'log-analyzer'
+            'attack-analyzer=attack_analyzer.interactive:main',  # This defines the CLI command 'attack-analyzer'
         ],
     },
 )
