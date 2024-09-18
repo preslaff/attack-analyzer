@@ -1,6 +1,6 @@
 import inquirer
-from attack.analyzer import LogAnalyzer, ClusteringAnalyzer
-from my_package.geolocation import GeoLocator
+from attack_analyzer.analyzer import LogAnalyzer, ClusteringAnalyzer
+from attack_analyzer.geolocation import GeoLocator
 
 
 class InteractiveSession:

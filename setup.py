@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='attack-analyzer',
+    name='attack_analyzer',
     version='0.1',
     description='Log Analyzer, Clustering, and Geolocation for Fail2Ban and UFW logs',
     author='preslaff',
