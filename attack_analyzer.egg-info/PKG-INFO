@@ -1,0 +1,12 @@
+Metadata-Version: 2.1
+Name: attack_analyzer
+Version: 0.1
+Summary: Log Analyzer, Clustering, and Geolocation for Fail2Ban and UFW logs
+Author: preslaff
+Requires-Dist: pandas
+Requires-Dist: scikit-learn
+Requires-Dist: numpy
+Requires-Dist: matplotlib
+Requires-Dist: inquirer
+Requires-Dist: folium
+Requires-Dist: requests

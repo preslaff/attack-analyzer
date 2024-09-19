@@ -1,0 +1,2 @@
+[console_scripts]
+attack-analyzer = attack_analyzer.interactive:main
