@@ -9,14 +9,40 @@ class LogAnalyzer:
         self.ufw_log_path = ufw_log_path
 
     def parse_fail2ban(self):
-        fail2ban_df = pd.read_csv(self.fail2ban_log_path, sep=' ', header=None, names=['date', 'time', 'ip', 'status'])
+    # Read the log file with spaces as delimiters
+        fail2ban_df = pd.read_csv(self.fail2ban_log_path, sep=r'\s+', engine='python', header=None,
+                                names=['date', 'time', 'service', 'pid', 'log_level', 'status', 'details'],
+                                usecols=[0, 1, 4, 5, 6])  # We only care about date, time, status, and details
+        # Combine date and time into datetime
         fail2ban_df['datetime'] = pd.to_datetime(fail2ban_df['date'] + ' ' + fail2ban_df['time'])
-        return fail2ban_df[['datetime', 'ip', 'status']]
+    
+        # Extract IP addresses from the 'details' column
+        fail2ban_df['ip'] = fail2ban_df['details'].str.extract(r'(\d+\.\d+\.\d+\.\d+)')
+    
+        # Only keep relevant columns for further analysis
+        fail2ban_df = fail2ban_df[['datetime', 'ip', 'status']]
+    
+        return fail2ban_df.dropna()  # Drop rows without an IP address
 
+    
+    
     def parse_ufw(self):
-        ufw_df = pd.read_csv(self.ufw_log_path, sep=' ', header=None, names=['date', 'time', 'ip', 'action'])
+        # Read the UFW log file with spaces as delimiters
+        ufw_df = pd.read_csv(self.ufw_log_path, sep=r'\s+', engine='python', header=None,
+                            names=['date', 'time', 'action', 'details'],
+                            usecols=[0, 1, 2, 3])  # Select necessary columns
+    
+        # Combine date and time into datetime
         ufw_df['datetime'] = pd.to_datetime(ufw_df['date'] + ' ' + ufw_df['time'])
-        return ufw_df[['datetime', 'ip', 'action']]
+    
+        # Extract IP addresses from the 'details' column
+        ufw_df['ip'] = ufw_df['details'].str.extract(r'(\d+\.\d+\.\d+\.\d+)')
+    
+        # Only keep relevant columns for further analysis
+        ufw_df = ufw_df[['datetime', 'ip', 'action']]
+    
+        return ufw_df.dropna()  # Drop rows without an IP address
+
 
     def find_repeated_ips(self):
         fail2ban_df = self.parse_fail2ban()
