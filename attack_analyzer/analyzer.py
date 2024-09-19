@@ -8,21 +8,40 @@ class LogAnalyzer:
         self.fail2ban_log_path = fail2ban_log_path
         self.ufw_log_path = ufw_log_path
 
+    import pandas as pd
+
     def parse_fail2ban(self):
-    # Read the log file with spaces as delimiters
-        fail2ban_df = pd.read_csv(self.fail2ban_log_path, sep=r'\s+', engine='python', header=None,
-                                names=['date', 'time', 'service', 'pid', 'log_level', 'status', 'details'],
-                                usecols=[0, 1, 4, 5, 6])  # We only care about date, time, status, and details
-        # Combine date and time into datetime
-        fail2ban_df['datetime'] = pd.to_datetime(fail2ban_df['date'] + ' ' + fail2ban_df['time'])
-    
-        # Extract IP addresses from the 'details' column
-        fail2ban_df['ip'] = fail2ban_df['details'].str.extract(r'(\d+\.\d+\.\d+\.\d+)')
-    
-        # Only keep relevant columns for further analysis
-        fail2ban_df = fail2ban_df[['datetime', 'ip', 'status']]
-    
-        return fail2ban_df.dropna()  # Drop rows without an IP address
+        data = []
+        
+        # Open the log file and read it line by line
+        with open(self.fail2ban_log_path, 'r') as file:
+            for line in file:
+                # Look for relevant information: IP address and the type of action
+                if "Found" in line or "Ban" in line or "Unban" in line:
+                    parts = line.split()
+                    date = parts[0]
+                    time = parts[1]
+                    status = parts[4]
+                    ip = None
+                    
+                    # Extract the IP address from the line based on "Found", "Ban", or "Unban"
+                    if "Found" in line:
+                        ip = parts[7]
+                    elif "Ban" in line or "Unban" in line:
+                        ip = parts[6]
+                    
+                    # Append the parsed data to the list
+                    if ip:
+                        data.append([f"{date} {time}", ip, status])
+        
+        # Convert the collected data into a pandas DataFrame
+        fail2ban_df = pd.DataFrame(data, columns=['datetime', 'ip', 'status'])
+        
+        # Convert the datetime string into a proper datetime object
+        fail2ban_df['datetime'] = pd.to_datetime(fail2ban_df['datetime'])
+        
+        return fail2ban_df
+
 
     
     
